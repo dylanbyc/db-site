@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is Dylan Bai's personal website, built with [Lektor](https://www.getlektor.com/) (a static site generator) and styled with a terminal-inspired theme using TX-02 font.
+This is Dylan Bai's personal website, built with [Lektor](https://www.getlektor.com/) (a static site generator) and styled with a terminal-inspired theme using [Maple Mono](https://github.com/subframe7536/maple-font) font.
 
 **Live site:** https://dylanbai.com
 **Deployment:** GitHub Pages via `dylanbyc/dylanbyc.github.io`
@@ -46,7 +46,7 @@ uvx lektor deploy ghpages
 
 - **`assets/`** - Static files copied directly to build
   - `css/style.css` - Main stylesheet
-  - `fonts/` - TX-02 font files
+  - `fonts/` - Maple Mono font files
 
 ### Content File Format (.lr)
 

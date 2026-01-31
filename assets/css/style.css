@@ -1,48 +1,24 @@
-/* TX-02 Font Family */
+/* Maple Mono Font Family */
 @font-face {
-  font-family: 'TX-02';
-  src: url('/fonts/TX-02-Regular.ttf') format('truetype');
+  font-family: 'Maple Mono';
+  src: url('/fonts/MapleMono-Regular.ttf') format('truetype');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'TX-02';
-  src: url('/fonts/TX-02-Oblique.ttf') format('truetype');
+  font-family: 'Maple Mono';
+  src: url('/fonts/MapleMono-Italic.ttf') format('truetype');
   font-weight: 400;
   font-style: italic;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'TX-02';
-  src: url('/fonts/TX-02-Bold.ttf') format('truetype');
+  font-family: 'Maple Mono';
+  src: url('/fonts/MapleMono-Bold.ttf') format('truetype');
   font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'TX-02';
-  src: url('/fonts/TX-02-BoldOblique.ttf') format('truetype');
-  font-weight: 700;
-  font-style: italic;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'TX-02';
-  src: url('/fonts/TX-02-Light.ttf') format('truetype');
-  font-weight: 300;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'TX-02';
-  src: url('/fonts/TX-02-SemiBold.ttf') format('truetype');
-  font-weight: 600;
   font-style: normal;
   font-display: swap;
 }
@@ -91,7 +67,7 @@ html {
 }
 
 body {
-  font-family: 'TX-02', 'Menlo', 'Monaco', 'Courier New', monospace;
+  font-family: 'Maple Mono', 'Menlo', 'Monaco', 'Courier New', monospace;
   font-weight: 300;
   line-height: 1.6;
   color: var(--text);
@@ -238,7 +214,7 @@ article h1:first-child {
 
 /* Code Blocks */
 code {
-  font-family: 'TX-02', 'Menlo', 'Monaco', 'Courier New', monospace;
+  font-family: 'Maple Mono', 'Menlo', 'Monaco', 'Courier New', monospace;
   background: var(--code-bg);
   padding: 0.2em 0.4em;
   border-radius: 3px;
