@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<article>
+  <h1>{{ this.title }}</h1>
+
+  {% if this.body %}
+  <div class="content">
+    {{ this.body }}
+  </div>
+  {% endif %}
+
+  <ul class="post-list">
+    {% for post in this.children %}
+    <li class="post-item">
+      <a href="{{ post|url }}">
+        <span class="post-title">{{ post.title }}</span>
+        <time datetime="{{ post.pub_date }}">{{ post.pub_date|dateformat('medium') }}</time>
+      </a>
+    </li>
+    {% endfor %}
+  </ul>
+</article>
+{% endblock %}

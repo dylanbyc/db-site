@@ -1,0 +1,13 @@
+_model: page
+---
+title: Home
+---
+body:
+
+Hi! I'm Dylan, a software engineer and researcher interested in machine learning, data science, and building useful tools.
+
+I am an [open source](https://github.com/dylanbyc) contributor and developer. My professional mission is to make science run at the speed of thought so that we can discover new solutions faster.
+
+If you'd like to connect, please feel free to reach out via [GitHub](https://github.com/dylanbyc) or [LinkedIn](https://linkedin.com/in/dylanbyc).
+
+For the curious, this website was hand-crafted using [Terminal.css](https://terminalcss.xyz/) and [Lektor](https://www.getlektor.com/). Font is TX-02.

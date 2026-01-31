@@ -1,0 +1,39 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<article class="blog-post">
+  <header class="post-header">
+    <h1>{{ this.title }}</h1>
+    <div class="post-meta">
+      <time datetime="{{ this.pub_date }}">{{ this.pub_date|dateformat('long') }}</time>
+      {% if this.author %}
+      <span class="author">by {{ this.author }}</span>
+      {% endif %}
+    </div>
+    {% if this.categories %}
+    <div class="categories">
+      {% for category in this.categories %}
+      <span class="category">{{ category }}</span>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </header>
+
+  <div class="content">
+    {{ this.body }}
+  </div>
+
+  <footer class="post-footer">
+    <div class="citation">
+      <h3>Citation</h3>
+      <pre><code>@article{bai{{ this.pub_date.year }}{{ this.title|lower|replace(' ', '') }},
+  author = {Bai, Dylan},
+  title = {{ '{' }}{{ this.title }}{{ '}' }},
+  year = {{ '{' }}{{ this.pub_date.year }}{{ '}' }},
+  url = {{ '{' }}{{ this|url(external=true) }}{{ '}' }}
+}</code></pre>
+    </div>
+    <p><a href="{{ '/blog'|url }}">&larr; Back to Blog</a></p>
+  </footer>
+</article>
+{% endblock %}

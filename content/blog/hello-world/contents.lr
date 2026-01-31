@@ -1,0 +1,34 @@
+_model: blog-post
+---
+title: Hello World
+---
+author: Dylan Bai
+---
+pub_date: 2025-01-30
+---
+categories: meta
+---
+body:
+
+Welcome to my new blog! This site is built with [Lektor](https://www.getlektor.com/), a static site generator that combines the simplicity of flat files with powerful templating.
+
+## Why Lektor?
+
+A few reasons I chose Lektor for this project:
+
+1. **Flat file content**: All content is stored in simple text files, easy to version control
+2. **Jinja2 templates**: Flexible templating without the overhead of a full framework
+3. **Admin interface**: Optional web UI for content editing
+4. **Extensible**: Python-based plugin system
+
+## The Terminal Aesthetic
+
+This site uses the TX-02 monospace font family and a Terminal.css-inspired design. The goal is a clean, focused reading experience that works well in both light and dark modes.
+
+```python
+# Example code block
+def greet(name: str) -> str:
+    return f"Hello, {name}!"
+```
+
+More posts coming soon.

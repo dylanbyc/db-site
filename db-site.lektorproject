@@ -1,0 +1,6 @@
+[project]
+name = Dylan Bai
+url = https://dylanbai.com
+
+[servers.ghpages]
+target = ghpages://dylanbyc/dylanbyc.github.io?cname=dylanbai.com
