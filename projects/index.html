@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Projects — Dylan Bai</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <script>
+    // Apply theme immediately to prevent flash
+    (function() {
+      const theme = localStorage.getItem('theme') || 'dark';
+      document.documentElement.setAttribute('data-theme', theme);
+    })();
+  </script>
+</head>
+<body>
+  <div class="site-header">
+    <h1 class="site-title">Dylan Bai's Website</h1>
+    <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode">
+      <span class="sun-icon">☀️</span>
+      <span class="moon-icon">🌙</span>
+    </button>
+  </div>
+
+  <nav>
+    <a href="../" class="nav-link" data-page="home"><span class="prompt">&gt;</span> Home<span class="cursor"></span></a>
+    <a href="../blog/" class="nav-link" data-page="blog"><span class="prompt">&gt;</span> Blog<span class="cursor"></span></a>
+    <a href="./" class="nav-link" data-page="projects"><span class="prompt">&gt;</span> Projects<span class="cursor"></span></a>
+    <a href="../bio/" class="nav-link" data-page="bio"><span class="prompt">&gt;</span> Bio<span class="cursor"></span></a>
+  </nav>
+
+  <main class="terminal-box">
+    
+<article>
+  
+  <h1>Projects</h1>
+  
+  <div class="content">
+    <p>A selection of projects I've worked on.</p>
+<h2>Open Source</h2>
+<p><em>Coming soon</em></p>
+<h2>Research</h2>
+<p><em>Coming soon</em></p>
+
+  </div>
+</article>
+
+  </main>
+
+  <footer>
+    <a href="https://github.com/dylanbyc" target="_blank" rel="noopener">GitHub</a>
+    <a href="https://linkedin.com/in/dylanbyc" target="_blank" rel="noopener">LinkedIn</a>
+  </footer>
+
+  <script>
+    // Theme toggle
+    const toggle = document.getElementById('theme-toggle');
+    toggle.addEventListener('click', () => {
+      const current = document.documentElement.getAttribute('data-theme');
+      const next = current === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+    });
+
+    // Set active nav link based on current path
+    (function() {
+      const path = window.location.pathname;
+      const navLinks = document.querySelectorAll('.nav-link');
+      navLinks.forEach(link => {
+        const page = link.dataset.page;
+        const isActive =
+          (page === 'home' && (path === '/' || path === '/index.html' || path.endsWith('/db-site/'))) ||
+          (page === 'blog' && path.includes('/blog')) ||
+          (page === 'projects' && path.includes('/projects')) ||
+          (page === 'bio' && path.includes('/bio'));
+        if (isActive) {
+          link.classList.add('active');
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

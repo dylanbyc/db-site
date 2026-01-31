@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hello World — Dylan Bai</title>
+  <link rel="stylesheet" href="../../css/style.css">
+  <script>
+    // Apply theme immediately to prevent flash
+    (function() {
+      const theme = localStorage.getItem('theme') || 'dark';
+      document.documentElement.setAttribute('data-theme', theme);
+    })();
+  </script>
+</head>
+<body>
+  <div class="site-header">
+    <h1 class="site-title">Dylan Bai's Website</h1>
+    <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode">
+      <span class="sun-icon">☀️</span>
+      <span class="moon-icon">🌙</span>
+    </button>
+  </div>
+
+  <nav>
+    <a href="../../" class="nav-link" data-page="home"><span class="prompt">&gt;</span> Home<span class="cursor"></span></a>
+    <a href="../" class="nav-link" data-page="blog"><span class="prompt">&gt;</span> Blog<span class="cursor"></span></a>
+    <a href="../../projects/" class="nav-link" data-page="projects"><span class="prompt">&gt;</span> Projects<span class="cursor"></span></a>
+    <a href="../../bio/" class="nav-link" data-page="bio"><span class="prompt">&gt;</span> Bio<span class="cursor"></span></a>
+  </nav>
+
+  <main class="terminal-box">
+    
+<article class="blog-post">
+  <header class="post-header">
+    <h1>Hello World</h1>
+    <div class="post-meta">
+      <time datetime="2025-01-30">January 30, 2025</time>
+      
+      <span class="author">by Dylan Bai</span>
+      
+    </div>
+    
+    <div class="categories">
+      
+      <span class="category">meta</span>
+      
+    </div>
+    
+  </header>
+
+  <div class="content">
+    <p>Welcome to my new blog! This site is built with <a href="https://www.getlektor.com/">Lektor</a>, a static site generator that combines the simplicity of flat files with powerful templating.</p>
+<h2>Why Lektor?</h2>
+<p>A few reasons I chose Lektor for this project:</p>
+<ol>
+<li><strong>Flat file content</strong>: All content is stored in simple text files, easy to version control</li>
+<li><strong>Jinja2 templates</strong>: Flexible templating without the overhead of a full framework</li>
+<li><strong>Admin interface</strong>: Optional web UI for content editing</li>
+<li><strong>Extensible</strong>: Python-based plugin system</li>
+</ol>
+<h2>The Terminal Aesthetic</h2>
+<p>This site uses the TX-02 monospace font family and a Terminal.css-inspired design. The goal is a clean, focused reading experience that works well in both light and dark modes.</p>
+<pre><code class="lang-python"># Example code block
+def greet(name: str) -&gt; str:
+    return f&quot;Hello, {name}!&quot;
+</code></pre>
+<p>More posts coming soon.</p>
+
+  </div>
+
+  <footer class="post-footer">
+    <div class="citation">
+      <h3>Citation</h3>
+      <pre><code>@article{bai2025helloworld,
+  author = {Bai, Dylan},
+  title = {Hello World},
+  year = {2025},
+  url = {https://dylanbai.com/blog/hello-world/}
+}</code></pre>
+    </div>
+    <p><a href="../">&larr; Back to Blog</a></p>
+  </footer>
+</article>
+
+  </main>
+
+  <footer>
+    <a href="https://github.com/dylanbyc" target="_blank" rel="noopener">GitHub</a>
+    <a href="https://linkedin.com/in/dylanbyc" target="_blank" rel="noopener">LinkedIn</a>
+  </footer>
+
+  <script>
+    // Theme toggle
+    const toggle = document.getElementById('theme-toggle');
+    toggle.addEventListener('click', () => {
+      const current = document.documentElement.getAttribute('data-theme');
+      const next = current === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+    });
+
+    // Set active nav link based on current path
+    (function() {
+      const path = window.location.pathname;
+      const navLinks = document.querySelectorAll('.nav-link');
+      navLinks.forEach(link => {
+        const page = link.dataset.page;
+        const isActive =
+          (page === 'home' && (path === '/' || path === '/index.html' || path.endsWith('/db-site/'))) ||
+          (page === 'blog' && path.includes('/blog')) ||
+          (page === 'projects' && path.includes('/projects')) ||
+          (page === 'bio' && path.includes('/bio'));
+        if (isActive) {
+          link.classList.add('active');
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
