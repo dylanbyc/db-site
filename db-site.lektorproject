@@ -3,4 +3,4 @@ name = Dylan Bai
 url = https://dylanbai.com
 
 [servers.ghpages]
-target = ghpages://dylanbyc/dylanbyc.github.io?cname=dylanbai.com
+target = ghpages://dylanbyc/db-site?cname=dylanbai.com
