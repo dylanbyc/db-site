@@ -26,7 +26,6 @@
     <a href="./" class="nav-link" data-page="home"><span class="prompt">&gt;</span> Home<span class="cursor"></span></a>
     <a href="blog/" class="nav-link" data-page="blog"><span class="prompt">&gt;</span> Blog<span class="cursor"></span></a>
     <a href="projects/" class="nav-link" data-page="projects"><span class="prompt">&gt;</span> Projects<span class="cursor"></span></a>
-    <a href="bio/" class="nav-link" data-page="bio"><span class="prompt">&gt;</span> Bio<span class="cursor"></span></a>
   </nav>
 
   <main class="terminal-box">
@@ -34,10 +33,10 @@
 <article>
   
   <div class="content">
-    <p>Hi! I'm Dylan, a software engineer and researcher interested in machine learning, data science, and building useful tools.</p>
-<p>I am an <a href="https://github.com/dylanbyc">open source</a> contributor and developer. My professional mission is to make science run at the speed of thought so that we can discover new solutions faster.</p>
-<p>If you'd like to connect, please feel free to reach out via <a href="https://github.com/dylanbyc">GitHub</a> or <a href="https://linkedin.com/in/dylanbyc">LinkedIn</a>.</p>
-<p>For the curious, this website was hand-crafted using <a href="https://terminalcss.xyz/">Terminal.css</a> and <a href="https://www.getlektor.com/">Lektor</a>. Font is TX-02.</p>
+    <p>Hi! I'm Dylan, a Machine Learning Engineer based in Melbourne.</p>
+<p>7+ years delivering production ML in banking and consulting. Currently leading a team of 5 data scientists at <strong>ANZ Bank</strong>, building credit models covering $12Bn in exposure. Previously shipped an end-to-end AML transaction monitoring solution scoring 15M profiles weekly on GCP Vertex AI.</p>
+<p>Before banking, I was at <strong>KPMG</strong> solving analytics problems across telco, transport, and financial services.</p>
+<p>I hold a <strong>Master of Business Analytics</strong> from Melbourne Business School and a <strong>BCom (Actuarial Studies)</strong> from the University of Melbourne.</p>
 
   </div>
 </article>
@@ -68,8 +67,7 @@
         const isActive =
           (page === 'home' && (path === '/' || path === '/index.html' || path.endsWith('/db-site/'))) ||
           (page === 'blog' && path.includes('/blog')) ||
-          (page === 'projects' && path.includes('/projects')) ||
-          (page === 'bio' && path.includes('/bio'));
+          (page === 'projects' && path.includes('/projects'));
         if (isActive) {
           link.classList.add('active');
         }

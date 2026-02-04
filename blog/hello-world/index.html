@@ -26,7 +26,6 @@
     <a href="../../" class="nav-link" data-page="home"><span class="prompt">&gt;</span> Home<span class="cursor"></span></a>
     <a href="../" class="nav-link" data-page="blog"><span class="prompt">&gt;</span> Blog<span class="cursor"></span></a>
     <a href="../../projects/" class="nav-link" data-page="projects"><span class="prompt">&gt;</span> Projects<span class="cursor"></span></a>
-    <a href="../../bio/" class="nav-link" data-page="bio"><span class="prompt">&gt;</span> Bio<span class="cursor"></span></a>
   </nav>
 
   <main class="terminal-box">
@@ -109,8 +108,7 @@ def greet(name: str) -&gt; str:
         const isActive =
           (page === 'home' && (path === '/' || path === '/index.html' || path.endsWith('/db-site/'))) ||
           (page === 'blog' && path.includes('/blog')) ||
-          (page === 'projects' && path.includes('/projects')) ||
-          (page === 'bio' && path.includes('/bio'));
+          (page === 'projects' && path.includes('/projects'));
         if (isActive) {
           link.classList.add('active');
         }
