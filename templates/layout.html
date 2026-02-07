@@ -37,6 +37,17 @@
     <a href="https://linkedin.com/in/dylanbyc" target="_blank" rel="noopener">LinkedIn</a>
   </footer>
 
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: isDark ? 'dark' : 'default',
+      fontFamily: "'Dank Mono', 'Menlo', monospace",
+      flowchart: { useMaxWidth: true, htmlLabels: true }
+    });
+  </script>
+
   <script>
     // Theme toggle
     const toggle = document.getElementById('theme-toggle');
