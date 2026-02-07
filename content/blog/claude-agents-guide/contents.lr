@@ -1,0 +1,362 @@
+_model: blog-post
+---
+title: Subagents vs Skills vs Agent Teams: A Field Guide to Claude Code's Multi-Agent Arsenal
+---
+author: Dylan Bai
+---
+pub_date: 2026-02-07
+---
+categories: claude-code, ai, agent-teams, tools
+---
+body:
+
+Claude Code now ships with three distinct ways to split work across multiple AI brains: **Subagents**, **Skills**, and the brand-new **Agent Teams** (launched with Opus 4.6 on Feb 5, 2026). Each solves a different problem, burns a different number of tokens, and will confuse you in a different way if you mix them up.
+
+Let's untangle them.
+
+---
+
+## The One-Liner Version
+
+| | Subagents | Skills | Agent Teams |
+|---|---|---|---|
+| **What** | Isolated worker threads | Reusable instruction packs | Independent parallel sessions |
+| **Context** | Own window | Inline (shared) | Fully separate |
+| **Communication** | Report back to caller | N/A | Peer-to-peer messaging |
+| **Token cost** | Medium | Low | High |
+| **Status** | Stable | Stable | Experimental |
+
+If subagents are interns who go do a task and come back with a summary, skills are cheat sheets you keep on your desk, and agent teams are a full war room of people who can talk to each other.
+
+---
+
+## Subagents: The Delegators
+
+When Claude hits a complex task, it can spawn a **subagent** via the `Task` tool. The subagent gets its own context window, its own system prompt, and a restricted set of tools. It does its thing, then returns a compact summary to the main conversation.
+
+Think of it as `fork()` for LLMs -- minus the existential dread of process management.
+
+### Built-in Subagent Types
+
+```
++-------------------+----------+----------------------------------+
+| Type              | Model    | Superpower                       |
++-------------------+----------+----------------------------------+
+| Explore           | Haiku    | Fast, read-only codebase search  |
+| Plan              | Inherited| Architect mode, read-only        |
+| General-purpose   | Inherited| Full toolkit, multi-step tasks   |
+| Bash              | Inherited| Terminal command specialist       |
+| Claude Code Guide | Haiku    | Answers "how do I..." questions  |
++-------------------+----------+----------------------------------+
+```
+
+### Why This Matters for Context
+
+Here's the key insight. Without subagents, every search result, every error log, every intermediate step piles into your main context window. It's like keeping every draft of every email you've ever written in your inbox.
+
+Subagents fix this:
+
+```
+WITHOUT SUBAGENTS (everything in one window):
++================================================================+
+| Main Context Window                                            |
+|                                                                |
+| [User prompt] [Search 1 results] [Search 2 results]           |
+| [Error log from attempt 1] [Fix attempt 1] [More errors]      |
+| [Search 3 results] [Fix attempt 2] [Build output]             |
+| [Search 4 results] [Fix attempt 3] [Test output]              |
+|                                                                |
+| Total: ~50,000 tokens of noise + your actual conversation      |
+| Status: CONTEXT WINDOW SWEATING NERVOUSLY                      |
++================================================================+
+
+WITH SUBAGENTS (isolated work, clean summaries):
++================================+
+| Main Context Window            |    +---------------------------+
+|                                |    | Subagent 1 (Explore)      |
+| [User prompt]                  |    | [Search 1] [Search 2]     |
+| [Summary from Subagent 1]  <------ | [Search 3] [Search 4]     |
+| [Summary from Subagent 2]  <--+    | Result: "Bug is in auth.ts"|
+| [Your clean conversation]  |  |    +---------------------------+
+|                             |  |
+| Total: ~5,000 tokens        |  |    +---------------------------+
+| Status: BREATHING EASY       |  +--- | Subagent 2 (Bash)         |
++================================+    | [npm test output]         |
+                                      | [error logs]              |
+                                      | Result: "3 tests failing" |
+                                      +---------------------------+
+```
+
+The math is simple. If a task generates `X` tokens of work and `Z` tokens of useful output, subagents keep the `X` in isolation and only return the `Z`. Run five such tasks and you save `5X - 5Z` tokens in your main window. That's often a 10x reduction.
+
+### Custom Subagents
+
+You can create your own in `.claude/agents/my-agent.md`:
+
+```yaml
+---
+name: security-reviewer
+model: sonnet
+tools:
+  - Read
+  - Grep
+  - Glob
+---
+You are a security review specialist. Analyze the provided code
+for OWASP Top 10 vulnerabilities and return a concise report.
+```
+
+Up to **7 subagents** can run simultaneously. They can run in the background while you keep working. They cannot, however, spawn sub-subagents. No turtles all the way down.
+
+---
+
+## Skills: The Playbooks
+
+Skills are reusable instruction sets defined in `SKILL.md` files. They don't get their own context window (by default) -- they inject knowledge directly into the main conversation, like loading a reference manual into your brain.
+
+### Subagents vs Skills at a Glance
+
+```
+SKILL (inline, shared context):
++============================================+
+| Main Context Window                        |
+|                                            |
+| [User prompt]                              |
+| [Skill instructions loaded inline -->]     |
+| [Claude works with skill knowledge]        |
+| [Output]                                   |
+|                                            |
+| Pro: Zero overhead, instant knowledge      |
+| Con: Eats into your context budget         |
++============================================+
+
+SUBAGENT (isolated context):
++========================+     +========================+
+| Main Context Window    |     | Subagent Context       |
+|                        |     |                        |
+| [User prompt]          |     | [Task prompt]          |
+| ...waiting...          |     | [Working...]           |
+| [Compact summary] <---------- [Full results]          |
+|                        |     |                        |
+| Pro: Context stays clean|    |                        |
+| Con: Startup overhead   |    |                        |
++========================+     +========================+
+```
+
+### How to Use Skills
+
+Skills live in `.claude/skills/<name>/SKILL.md` and are invoked two ways:
+
+1. **User invocation**: Type `/skill-name` in Claude Code (e.g., `/deploy`, `/fix-issue 42`)
+2. **Auto-invocation**: Claude reads the skill description and triggers it when relevant
+
+```yaml
+# .claude/skills/deploy/SKILL.md
+---
+description: Deploy the application to production
+disable-model-invocation: true  # User-only, no auto-trigger
+---
+Run the deployment pipeline:
+1. Run tests: `npm test`
+2. Build: `npm run build`
+3. Deploy: `npm run deploy`
+4. Verify: curl the health endpoint
+```
+
+Skills can also run in a forked context (like a subagent) by adding `context: fork` to the frontmatter. Best of both worlds -- reusable instructions with context isolation.
+
+### When to Use Which
+
+```
+Need to...                          Use...
+-------------------------------------+------------------
+Look up code across the repo          Subagent (Explore)
+Apply a standard review checklist     Skill
+Run a complex multi-file refactor     Subagent (General)
+Execute a deployment playbook         Skill (user-invoked)
+Answer "how does X work?"            Subagent (Guide)
+Add project conventions to Claude     Skill (auto-invoked)
+```
+
+---
+
+## Agent Teams: The War Room
+
+This is the new hotness. Shipped Feb 5, 2026 with Opus 4.6. Still experimental. Still thrilling.
+
+Agent Teams let you spawn **multiple fully independent Claude Code sessions** that can talk to each other. Not just report back to a boss -- actually message each other peer-to-peer. It's the difference between a manager delegating tasks and a team collaborating on a whiteboard.
+
+### Enabling Agent Teams
+
+```json
+// settings.json or .claude/settings.json
+{
+  "env": {
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
+  }
+}
+```
+
+### Architecture
+
+```
++================================================================+
+|                        AGENT TEAM                              |
+|                                                                |
+|  +------------------+                                          |
+|  |   TEAM LEAD      |  Spawns teammates, coordinates,         |
+|  |   (Your session) |  approves plans                         |
+|  +--------+---------+                                          |
+|           |                                                    |
+|     spawn | + task assignment                                  |
+|           |                                                    |
+|  +--------+--+----------+-----------+                          |
+|  |           |          |           |                          |
+|  v           v          v           v                          |
+| +---------+ +--------+ +---------+ +--------+                 |
+| |Teammate | |Teammate| |Teammate | |Teammate|                 |
+| |  "auth" | | "api"  | | "tests" | | "docs" |                 |
+| +---------+ +--------+ +---------+ +--------+                 |
+|  |    ^      |    ^      |    ^      |                         |
+|  |    |      |    |      |    |      |                         |
+|  +----+------+----+------+----+------+  <-- peer-to-peer      |
+|       Direct messages between agents       messaging           |
+|                                                                |
+|  +----------------------------------------------------------+  |
+|  | SHARED TASK LIST  (~/.claude/tasks/{team}/)               | |
+|  | [ ] Implement auth middleware         -> teammate "auth"  | |
+|  | [ ] Build REST endpoints              -> teammate "api"   | |
+|  | [ ] Write integration tests           -> teammate "tests" | |
+|  | [ ] Update API documentation          -> teammate "docs"  | |
+|  +----------------------------------------------------------+  |
++================================================================+
+```
+
+### The Killer Feature: Peer-to-Peer Messaging
+
+With subagents, communication is strictly hierarchical -- worker reports to boss. With agent teams, any teammate can message any other teammate directly:
+
+```
+SUBAGENT COMMUNICATION:              AGENT TEAM COMMUNICATION:
+
+      +------+                            +------+
+      | Main |                            | Lead |
+      +--+---+                            +--+---+
+        / \                                  |
+       /   \                              (spawn)
+      v     v                                |
+  +---+  +---+                     +---------+---------+
+  | A |  | B |                     |         |         |
+  +---+  +---+                     v         v         v
+                                +---+     +---+     +---+
+  A and B cannot talk.          | A | <-> | B | <-> | C |
+  They only report to Main.    +---+     +---+     +---+
+
+                                A, B, and C can message
+                                each other directly.
+```
+
+This means the "tests" teammate can ask the "api" teammate about endpoint signatures without routing through the team lead. Less bottleneck, more collaboration.
+
+### Context Window: The Full Picture
+
+Here's how all three approaches compare for a task requiring four parallel workstreams:
+
+```
+APPROACH 1: Everything in one context (no delegation)
++====================================================================+
+| Single Context Window                                              |
+| [All prompts + all work + all results + all errors]                |
+|                                                                    |
+| Token usage: ██████████████████████████████████████████  ~200K     |
+| Utilization:  30% signal, 70% noise                               |
+| Risk: Context overflow, degraded quality                           |
++====================================================================+
+
+APPROACH 2: Subagents (isolated workers, summaries return)
++=========================+
+| Main Context Window     |   +-----------+ +-----------+
+| [Prompts + Summaries]   |   | Worker 1  | | Worker 2  |
+|                         |   | ~30K work | | ~30K work |
+| Token usage: ████ ~20K  |   +-----------+ +-----------+
+| Signal ratio: ~90%      |   +-----------+ +-----------+
+|                         |   | Worker 3  | | Worker 4  |
++=========================+   | ~30K work | | ~30K work |
+                              +-----------+ +-----------+
+Total tokens: ~140K (but main window stays clean at 20K)
+
+APPROACH 3: Agent Teams (independent sessions, peer messaging)
++==================+
+| Lead Context     |   +==============+ +==============+
+| [Coordination]   |   | Teammate 1   | | Teammate 2   |
+|                  |   | Full session  | | Full session  |
+| Tokens: ██ ~10K  |   | ~50K tokens  | | ~50K tokens  |
++==================+   +==============+ +==============+
+                       +==============+ +==============+
+                       | Teammate 3   | | Teammate 4   |
+                       | Full session  | | Full session  |
+                       | ~50K tokens  | | ~50K tokens  |
+                       +==============+ +==============+
+Total tokens: ~210K (but spread across 5 independent windows)
+Lead window stays minimal. Each teammate has full autonomy.
+```
+
+The tradeoff is clear:
+- **Skills**: Cheapest, but shares context space
+- **Subagents**: Great balance, isolates work, returns summaries
+- **Agent Teams**: Maximum parallelism, maximum autonomy, maximum token spend
+
+### Real-World Scale
+
+Anthropic's own team used agent teams to build a C compiler with Opus 4.6 -- nearly 2,000 Claude Code sessions over two weeks, 2 billion input tokens, 140 million output tokens, ~$20,000 in compute. Not your weekend side project budget, but proof the architecture scales.
+
+### Quick Start: Your First Agent Team
+
+Press **Shift+Tab** in Claude Code to enable delegate mode (keeps the lead focused on coordination), then:
+
+```
+You: "Build a REST API with auth, tests, and docs"
+
+Claude (Lead):
+  -> Spawns teammate "auth" with auth middleware task
+  -> Spawns teammate "api" with endpoint implementation task
+  -> Spawns teammate "tests" with test writing task
+  -> Spawns teammate "docs" with documentation task
+
+Teammates work independently, message each other for
+interface contracts, and update the shared task list.
+
+Lead monitors progress and approves plans.
+```
+
+Best practices:
+- **2-5 teammates** with **5-6 tasks each** is the sweet spot
+- Ensure teammates own **different files** to avoid merge conflicts
+- Give rich spawn prompts -- teammates don't inherit the lead's conversation history
+- Start with research tasks before parallel implementation
+- Monitor your team. Unattended teams risk wasted effort (and wasted dollars)
+
+---
+
+## TL;DR Decision Tree
+
+```
+Do you need to delegate work?
+|
++-- No --> Just use Claude directly
+|
++-- Yes --> Does the work need its own context?
+            |
+            +-- No --> Use a SKILL (inline instructions)
+            |
+            +-- Yes --> Do workers need to talk to each other?
+                        |
+                        +-- No --> Use SUBAGENTS (isolated, report back)
+                        |
+                        +-- Yes --> Use AGENT TEAMS (independent, peer-to-peer)
+                                    (experimental, enable the feature flag first)
+```
+
+The progression from skills to subagents to agent teams mirrors how human organizations scale: from reference docs, to delegated tasks, to autonomous teams. Claude Code now supports all three levels, and knowing which to reach for is half the battle.
+
+Now go spawn some agents. Responsibly.
