@@ -292,11 +292,51 @@ pre code {
   transition: border-color 0.2s ease, background-color 0.2s ease;
 }
 
+.post-card--has-image {
+  display: flex;
+  gap: 1.5rem;
+  align-items: flex-start;
+}
+
 .post-card:hover {
   border-color: var(--link);
   background: var(--code-bg);
   text-decoration: none;
   color: var(--text);
+}
+
+/* Post card image */
+.post-card-image {
+  flex-shrink: 0;
+  width: 240px;
+  border-radius: 3px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+
+.post-card-image img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.post-card-body {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Post cover image (individual post page) */
+.post-cover {
+  margin-bottom: 1.5rem;
+  border-radius: 4px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+
+.post-cover img {
+  display: block;
+  width: 100%;
+  height: auto;
 }
 
 .post-card-header {
@@ -531,6 +571,14 @@ pre.mermaid {
 
   .post-card {
     padding: 1rem 1.25rem;
+  }
+
+  .post-card--has-image {
+    flex-direction: column;
+  }
+
+  .post-card-image {
+    width: 100%;
   }
 
   .post-card-title {
