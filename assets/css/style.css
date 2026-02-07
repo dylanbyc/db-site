@@ -24,30 +24,44 @@
 }
 
 /* CSS Custom Properties for Theming */
+/* Light theme: Monokai Pro Light (Filter Sun) */
 :root {
-  --bg: #ffffff;
-  --text: #1a1a1a;
-  --text-muted: #666666;
-  --link: #0066cc;
-  --link-hover: #004499;
-  --border: #cccccc;
-  --code-bg: #f5f5f5;
-  --nav-hover: #e0e0e0;
-  --button-bg: #f0f0f0;
-  --button-border: #cccccc;
+  --bg: #f8efe7;
+  --text: #2c232e;
+  --text-muted: #92898a;
+  --link: #218871;
+  --link-hover: #2473b6;
+  --border: #d2c9c4;
+  --code-bg: #eee5de;
+  --nav-hover: #eee5de;
+  --button-bg: #ded5d0;
+  --button-border: #d2c9c4;
+  --accent-red: #ce4770;
+  --accent-orange: #d4572b;
+  --accent-yellow: #b16803;
+  --accent-green: #218871;
+  --accent-blue: #2473b6;
+  --accent-purple: #6851a2;
 }
 
+/* Dark theme: Monokai Pro (Filter Spectrum) */
 [data-theme="dark"] {
-  --bg: #1a1a1a;
-  --text: #ffffff;
-  --text-muted: #999999;
-  --link: #66b3ff;
-  --link-hover: #99ccff;
-  --border: #444444;
-  --code-bg: #2a2a2a;
-  --nav-hover: #333333;
-  --button-bg: #333333;
-  --button-border: #555555;
+  --bg: #222222;
+  --text: #f7f1ff;
+  --text-muted: #69676c;
+  --link: #7bd88f;
+  --link-hover: #5ad4e6;
+  --border: #525053;
+  --code-bg: #363537;
+  --nav-hover: #363537;
+  --button-bg: #363537;
+  --button-border: #525053;
+  --accent-red: #fc618d;
+  --accent-orange: #fd9353;
+  --accent-yellow: #fce566;
+  --accent-green: #7bd88f;
+  --accent-blue: #5ad4e6;
+  --accent-purple: #948ae3;
 }
 
 /* Blinking Cursor Animation */
@@ -144,14 +158,14 @@ nav {
 /* Prompt and Cursor for active nav */
 .prompt {
   display: none;
-  color: var(--text);
+  color: var(--accent-green);
 }
 
 .cursor {
   display: none;
   width: 4px;
   height: 1.1em;
-  background-color: var(--link);
+  background-color: var(--accent-green);
   margin-left: 2px;
   vertical-align: text-bottom;
 }
@@ -263,6 +277,7 @@ pre code {
 .category {
   display: inline-block;
   background: var(--code-bg);
+  color: var(--accent-purple);
   padding: 0.2em 0.6em;
   border-radius: 3px;
   font-size: 0.85rem;
@@ -505,16 +520,16 @@ th {
 
 .token-fill {
   height: 100%;
-  background: #e55;
+  background: var(--accent-red);
   border-radius: 3px;
 }
 
 .token-fill--good {
-  background: #5a5;
+  background: var(--accent-green);
 }
 
 .token-fill--great {
-  background: #59f;
+  background: var(--accent-blue);
 }
 
 .approach-list {
