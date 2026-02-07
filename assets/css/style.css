@@ -29,8 +29,8 @@
   --bg: #f8efe7;
   --text: #2c232e;
   --text-muted: #92898a;
-  --link: #ce4770;
-  --link-hover: #ce4770;
+  --link: #FF6188;
+  --link-hover: #FF6188;
   --border: #d2c9c4;
   --code-bg: #eee5de;
   --nav-hover: #eee5de;
@@ -49,8 +49,8 @@
   --bg: #222222;
   --text: #f7f1ff;
   --text-muted: #69676c;
-  --link: #5ad4e6;
-  --link-hover: #5ad4e6;
+  --link: #FF6188;
+  --link-hover: #FF6188;
   --border: #525053;
   --code-bg: #363537;
   --nav-hover: #363537;
@@ -158,14 +158,14 @@ nav {
 /* Prompt and Cursor for active nav */
 .prompt {
   display: none;
-  color: var(--accent-yellow);
+  color: #FF6188;
 }
 
 .cursor {
   display: none;
   width: 4px;
   height: 1.1em;
-  background-color: var(--accent-yellow);
+  background-color: #FF6188;
   margin-left: 2px;
   vertical-align: text-bottom;
 }
