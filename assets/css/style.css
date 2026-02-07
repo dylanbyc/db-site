@@ -277,7 +277,7 @@ pre code {
 .category {
   display: inline-block;
   background: var(--code-bg);
-  color: var(--accent-purple);
+  color: var(--text-muted);
   padding: 0.2em 0.6em;
   border-radius: 3px;
   font-size: 0.85rem;
@@ -314,7 +314,7 @@ pre code {
 }
 
 .post-card:hover {
-  border-color: var(--link);
+  border-color: var(--text-muted);
   background: var(--code-bg);
   text-decoration: none;
   color: var(--text);
@@ -361,12 +361,7 @@ pre code {
 .post-card-title {
   font-size: 1.3rem;
   margin: 0 0 0.4rem 0;
-  color: var(--link);
-  transition: color 0.2s ease;
-}
-
-.post-card:hover .post-card-title {
-  color: var(--link-hover);
+  color: var(--text);
 }
 
 .post-card-meta {
