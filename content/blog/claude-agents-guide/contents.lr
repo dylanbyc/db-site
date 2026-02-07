@@ -38,17 +38,13 @@ Think of it as `fork()` for LLMs -- minus the existential dread of process manag
 
 ### Built-in Subagent Types
 
-```
-+-------------------+----------+----------------------------------+
-| Type              | Model    | Superpower                       |
-+-------------------+----------+----------------------------------+
-| Explore           | Haiku    | Fast, read-only codebase search  |
-| Plan              | Inherited| Architect mode, read-only        |
-| General-purpose   | Inherited| Full toolkit, multi-step tasks   |
-| Bash              | Inherited| Terminal command specialist       |
-| Claude Code Guide | Haiku    | Answers "how do I..." questions  |
-+-------------------+----------+----------------------------------+
-```
+| Type | Model | Superpower |
+|---|---|---|
+| Explore | Haiku | Fast, read-only codebase search |
+| Plan | Inherited | Architect mode, read-only |
+| General-purpose | Inherited | Full toolkit, multi-step tasks |
+| Bash | Inherited | Terminal command specialist |
+| Claude Code Guide | Haiku | Answers "how do I..." questions |
 
 ### Why This Matters for Context
 
@@ -167,16 +163,14 @@ Skills can also run in a forked context (like a subagent) by adding `context: fo
 
 ### When to Use Which
 
-```
-Need to...                          Use...
--------------------------------------+------------------
-Look up code across the repo          Subagent (Explore)
-Apply a standard review checklist     Skill
-Run a complex multi-file refactor     Subagent (General)
-Execute a deployment playbook         Skill (user-invoked)
-Answer "how does X work?"            Subagent (Guide)
-Add project conventions to Claude     Skill (auto-invoked)
-```
+| Need to... | Use... |
+|---|---|
+| Look up code across the repo | Subagent (Explore) |
+| Apply a standard review checklist | Skill |
+| Run a complex multi-file refactor | Subagent (General) |
+| Execute a deployment playbook | Skill (user-invoked) |
+| Answer "how does X work?" | Subagent (Guide) |
+| Add project conventions to Claude | Skill (auto-invoked) |
 
 ----
 
