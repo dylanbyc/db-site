@@ -38,17 +38,13 @@ Think of it as `fork()` for LLMs -- minus the existential dread of process manag
 
 ### Built-in Subagent Types
 
-```
-+-------------------+----------+----------------------------------+
-| Type              | Model    | Superpower                       |
-+-------------------+----------+----------------------------------+
-| Explore           | Haiku    | Fast, read-only codebase search  |
-| Plan              | Inherited| Architect mode, read-only        |
-| General-purpose   | Inherited| Full toolkit, multi-step tasks   |
-| Bash              | Inherited| Terminal command specialist       |
-| Claude Code Guide | Haiku    | Answers "how do I..." questions  |
-+-------------------+----------+----------------------------------+
-```
+| Type | Model | Superpower |
+|---|---|---|
+| Explore | Haiku | Fast, read-only codebase search |
+| Plan | Inherited | Architect mode, read-only |
+| General-purpose | Inherited | Full toolkit, multi-step tasks |
+| Bash | Inherited | Terminal command specialist |
+| Claude Code Guide | Haiku | Answers "how do I..." questions |
 
 ### Why This Matters for Context
 
@@ -56,36 +52,20 @@ Here's the key insight. Without subagents, every search result, every error log,
 
 Subagents fix this:
 
-```
-WITHOUT SUBAGENTS (everything in one window):
-+================================================================+
-| Main Context Window                                            |
-|                                                                |
-| [User prompt] [Search 1 results] [Search 2 results]           |
-| [Error log from attempt 1] [Fix attempt 1] [More errors]      |
-| [Search 3 results] [Fix attempt 2] [Build output]             |
-| [Search 4 results] [Fix attempt 3] [Test output]              |
-|                                                                |
-| Total: ~50,000 tokens of noise + your actual conversation      |
-| Status: CONTEXT WINDOW SWEATING NERVOUSLY                      |
-+================================================================+
-
-WITH SUBAGENTS (isolated work, clean summaries):
-+================================+
-| Main Context Window            |    +---------------------------+
-|                                |    | Subagent 1 (Explore)      |
-| [User prompt]                  |    | [Search 1] [Search 2]     |
-| [Summary from Subagent 1]  <------ | [Search 3] [Search 4]     |
-| [Summary from Subagent 2]  <--+    | Result: "Bug is in auth.ts"|
-| [Your clean conversation]  |  |    +---------------------------+
-|                             |  |
-| Total: ~5,000 tokens        |  |    +---------------------------+
-| Status: BREATHING EASY       |  +--- | Subagent 2 (Bash)         |
-+================================+    | [npm test output]         |
-                                      | [error logs]              |
-                                      | Result: "3 tests failing" |
-                                      +---------------------------+
-```
+<div class="diagram-compare">
+<div class="diagram-panel">
+<h4>Without Subagents</h4>
+<p>Everything in one window: prompts, search results, error logs, fix attempts, build output...</p>
+<div class="token-meter"><div class="token-fill" style="width:90%"></div></div>
+<p><strong>~50K tokens</strong> — 30% signal, 70% noise<br>Status: context window sweating nervously</p>
+</div>
+<div class="diagram-panel">
+<h4>With Subagents</h4>
+<p>Main window keeps only prompts + compact summaries. Heavy lifting happens in isolated subagent windows.</p>
+<div class="token-meter"><div class="token-fill token-fill--good" style="width:15%"></div></div>
+<p><strong>~5K tokens</strong> in main window — 90% signal<br>Subagents handle the rest in their own contexts</p>
+</div>
+</div>
 
 The math is simple. If a task generates `X` tokens of work and `Z` tokens of useful output, subagents keep the `X` in isolation and only return the `Z`. Run five such tasks and you save `5X - 5Z` tokens in your main window. That's often a 10x reduction.
 
@@ -116,32 +96,12 @@ Skills are reusable instruction sets defined in `SKILL.md` files. They don't get
 
 ### Subagents vs Skills at a Glance
 
-```
-SKILL (inline, shared context):
-+============================================+
-| Main Context Window                        |
-|                                            |
-| [User prompt]                              |
-| [Skill instructions loaded inline -->]     |
-| [Claude works with skill knowledge]        |
-| [Output]                                   |
-|                                            |
-| Pro: Zero overhead, instant knowledge      |
-| Con: Eats into your context budget         |
-+============================================+
-
-SUBAGENT (isolated context):
-+========================+     +========================+
-| Main Context Window    |     | Subagent Context       |
-|                        |     |                        |
-| [User prompt]          |     | [Task prompt]          |
-| ...waiting...          |     | [Working...]           |
-| [Compact summary] <---------- [Full results]          |
-|                        |     |                        |
-| Pro: Context stays clean|    |                        |
-| Con: Startup overhead   |    |                        |
-+========================+     +========================+
-```
+| | Skill (inline) | Subagent (isolated) |
+|---|---|---|
+| **Context** | Shared with main window | Own separate window |
+| **How it works** | Instructions loaded directly into conversation | Task delegated, compact summary returns |
+| **Pro** | Zero overhead, instant knowledge | Context stays clean |
+| **Con** | Eats into your context budget | Startup overhead |
 
 ### How to Use Skills
 
@@ -167,16 +127,14 @@ Skills can also run in a forked context (like a subagent) by adding `context: fo
 
 ### When to Use Which
 
-```
-Need to...                          Use...
--------------------------------------+------------------
-Look up code across the repo          Subagent (Explore)
-Apply a standard review checklist     Skill
-Run a complex multi-file refactor     Subagent (General)
-Execute a deployment playbook         Skill (user-invoked)
-Answer "how does X work?"            Subagent (Guide)
-Add project conventions to Claude     Skill (auto-invoked)
-```
+| Need to... | Use... |
+|---|---|
+| Look up code across the repo | Subagent (Explore) |
+| Apply a standard review checklist | Skill |
+| Run a complex multi-file refactor | Subagent (General) |
+| Execute a deployment playbook | Skill (user-invoked) |
+| Answer "how does X work?" | Subagent (Guide) |
+| Add project conventions to Claude | Skill (auto-invoked) |
 
 ----
 
@@ -199,62 +157,52 @@ Agent Teams let you spawn **multiple fully independent Claude Code sessions** th
 
 ### Architecture
 
-```
-+================================================================+
-|                        AGENT TEAM                              |
-|                                                                |
-|  +------------------+                                          |
-|  |   TEAM LEAD      |  Spawns teammates, coordinates,         |
-|  |   (Your session) |  approves plans                         |
-|  +--------+---------+                                          |
-|           |                                                    |
-|     spawn | + task assignment                                  |
-|           |                                                    |
-|  +--------+--+----------+-----------+                          |
-|  |           |          |           |                          |
-|  v           v          v           v                          |
-| +---------+ +--------+ +---------+ +--------+                 |
-| |Teammate | |Teammate| |Teammate | |Teammate|                 |
-| |  "auth" | | "api"  | | "tests" | | "docs" |                 |
-| +---------+ +--------+ +---------+ +--------+                 |
-|  |    ^      |    ^      |    ^      |                         |
-|  |    |      |    |      |    |      |                         |
-|  +----+------+----+------+----+------+  <-- peer-to-peer      |
-|       Direct messages between agents       messaging           |
-|                                                                |
-|  +----------------------------------------------------------+  |
-|  | SHARED TASK LIST  (~/.claude/tasks/{team}/)               | |
-|  | [ ] Implement auth middleware         -> teammate "auth"  | |
-|  | [ ] Build REST endpoints              -> teammate "api"   | |
-|  | [ ] Write integration tests           -> teammate "tests" | |
-|  | [ ] Update API documentation          -> teammate "docs"  | |
-|  +----------------------------------------------------------+  |
-+================================================================+
-```
+<pre class="mermaid">
+graph TD
+    Lead["TEAM LEAD\n(Your session)"]
+    Lead -->|spawn + task| Auth["Teammate: auth"]
+    Lead -->|spawn + task| API["Teammate: api"]
+    Lead -->|spawn + task| Tests["Teammate: tests"]
+    Lead -->|spawn + task| Docs["Teammate: docs"]
+    Auth <-->|peer msg| API
+    API <-->|peer msg| Tests
+    Tests <-->|peer msg| Docs
+    Auth <-->|peer msg| Tests
+    Tasks[("SHARED TASK LIST\n~/.claude/tasks/team/")]
+    Auth -.->|claim| Tasks
+    API -.->|claim| Tasks
+    Tests -.->|claim| Tasks
+    Docs -.->|claim| Tasks
+</pre>
 
 ### The Killer Feature: Peer-to-Peer Messaging
 
 With subagents, communication is strictly hierarchical -- worker reports to boss. With agent teams, any teammate can message any other teammate directly:
 
-```
-SUBAGENT COMMUNICATION:              AGENT TEAM COMMUNICATION:
-
-      +------+                            +------+
-      | Main |                            | Lead |
-      +--+---+                            +--+---+
-        / \                                  |
-       /   \                              (spawn)
-      v     v                                |
-  +---+  +---+                     +---------+---------+
-  | A |  | B |                     |         |         |
-  +---+  +---+                     v         v         v
-                                +---+     +---+     +---+
-  A and B cannot talk.          | A | <-> | B | <-> | C |
-  They only report to Main.    +---+     +---+     +---+
-
-                                A, B, and C can message
-                                each other directly.
-```
+<div class="diagram-compare">
+<div class="diagram-panel">
+<h4>Subagent Communication</h4>
+<pre class="mermaid">
+graph TD
+    Main["Main"] --> A
+    Main --> B
+</pre>
+<p>A and B cannot talk. They only report to Main.</p>
+</div>
+<div class="diagram-panel">
+<h4>Agent Team Communication</h4>
+<pre class="mermaid">
+graph TD
+    Lead --> A
+    Lead --> B
+    Lead --> C
+    A <--> B
+    B <--> C
+    A <--> C
+</pre>
+<p>A, B, and C can message each other directly.</p>
+</div>
+</div>
 
 This means the "tests" teammate can ask the "api" teammate about endpoint signatures without routing through the team lead. Less bottleneck, more collaboration.
 
@@ -262,44 +210,23 @@ This means the "tests" teammate can ask the "api" teammate about endpoint signat
 
 Here's how all three approaches compare for a task requiring four parallel workstreams:
 
-```
-APPROACH 1: Everything in one context (no delegation)
-+====================================================================+
-| Single Context Window                                              |
-| [All prompts + all work + all results + all errors]                |
-|                                                                    |
-| Token usage: ██████████████████████████████████████████  ~200K     |
-| Utilization:  30% signal, 70% noise                               |
-| Risk: Context overflow, degraded quality                           |
-+====================================================================+
-
-APPROACH 2: Subagents (isolated workers, summaries return)
-+=========================+
-| Main Context Window     |   +-----------+ +-----------+
-| [Prompts + Summaries]   |   | Worker 1  | | Worker 2  |
-|                         |   | ~30K work | | ~30K work |
-| Token usage: ████ ~20K  |   +-----------+ +-----------+
-| Signal ratio: ~90%      |   +-----------+ +-----------+
-|                         |   | Worker 3  | | Worker 4  |
-+=========================+   | ~30K work | | ~30K work |
-                              +-----------+ +-----------+
-Total tokens: ~140K (but main window stays clean at 20K)
-
-APPROACH 3: Agent Teams (independent sessions, peer messaging)
-+==================+
-| Lead Context     |   +==============+ +==============+
-| [Coordination]   |   | Teammate 1   | | Teammate 2   |
-|                  |   | Full session  | | Full session  |
-| Tokens: ██ ~10K  |   | ~50K tokens  | | ~50K tokens  |
-+==================+   +==============+ +==============+
-                       +==============+ +==============+
-                       | Teammate 3   | | Teammate 4   |
-                       | Full session  | | Full session  |
-                       | ~50K tokens  | | ~50K tokens  |
-                       +==============+ +==============+
-Total tokens: ~210K (but spread across 5 independent windows)
-Lead window stays minimal. Each teammate has full autonomy.
-```
+<div class="approach-list">
+<div class="approach">
+<h4>Approach 1: Single Context (no delegation)</h4>
+<div class="token-meter"><div class="token-fill" style="width:95%"></div></div>
+<p><strong>~200K tokens</strong> in one window — 30% signal, 70% noise. Risk: context overflow, degraded quality.</p>
+</div>
+<div class="approach">
+<h4>Approach 2: Subagents (isolated workers, summaries return)</h4>
+<div class="token-meter"><div class="token-fill token-fill--good" style="width:12%"></div></div>
+<p><strong>~20K tokens</strong> in main window — 90% signal. 4 workers handle ~30K each in isolation. Total: ~140K, but main stays clean.</p>
+</div>
+<div class="approach">
+<h4>Approach 3: Agent Teams (independent sessions, peer messaging)</h4>
+<div class="token-meter"><div class="token-fill token-fill--great" style="width:6%"></div></div>
+<p><strong>~10K tokens</strong> in lead window — coordination only. 4 teammates run full ~50K sessions independently. Total: ~210K across 5 windows. Maximum autonomy.</p>
+</div>
+</div>
 
 The tradeoff is clear:
 - **Skills**: Cheapest, but shares context space
@@ -340,22 +267,15 @@ Best practices:
 
 ## TL;DR Decision Tree
 
-```
-Do you need to delegate work?
-|
-+-- No --> Just use Claude directly
-|
-+-- Yes --> Does the work need its own context?
-            |
-            +-- No --> Use a SKILL (inline instructions)
-            |
-            +-- Yes --> Do workers need to talk to each other?
-                        |
-                        +-- No --> Use SUBAGENTS (isolated, report back)
-                        |
-                        +-- Yes --> Use AGENT TEAMS (independent, peer-to-peer)
-                                    (experimental, enable the feature flag first)
-```
+<pre class="mermaid">
+graph TD
+    Q1{"Do you need to\ndelegate work?"} -->|No| A1["Just use Claude directly"]
+    Q1 -->|Yes| Q2{"Does it need its\nown context?"}
+    Q2 -->|No| A2["Use a SKILL\n(inline instructions)"]
+    Q2 -->|Yes| Q3{"Do workers need to\ntalk to each other?"}
+    Q3 -->|No| A3["Use SUBAGENTS\n(isolated, report back)"]
+    Q3 -->|Yes| A4["Use AGENT TEAMS\n(peer-to-peer, experimental)"]
+</pre>
 
 The progression from skills to subagents to agent teams mirrors how human organizations scale: from reference docs, to delegated tasks, to autonomous teams. Claude Code now supports all three levels, and knowing which to reach for is half the battle.
 
