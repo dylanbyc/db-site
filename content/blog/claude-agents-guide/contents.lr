@@ -14,7 +14,7 @@ Claude Code now ships with three distinct ways to split work across multiple AI 
 
 Let's untangle them.
 
----
+----
 
 ## The One-Liner Version
 
@@ -28,7 +28,7 @@ Let's untangle them.
 
 If subagents are interns who go do a task and come back with a summary, skills are cheat sheets you keep on your desk, and agent teams are a full war room of people who can talk to each other.
 
----
+----
 
 ## Subagents: The Delegators
 
@@ -94,21 +94,21 @@ The math is simple. If a task generates `X` tokens of work and `Z` tokens of use
 You can create your own in `.claude/agents/my-agent.md`:
 
 ```yaml
----
 name: security-reviewer
 model: sonnet
 tools:
   - Read
   - Grep
   - Glob
----
+
+# Instructions below the frontmatter
 You are a security review specialist. Analyze the provided code
 for OWASP Top 10 vulnerabilities and return a concise report.
 ```
 
 Up to **7 subagents** can run simultaneously. They can run in the background while you keep working. They cannot, however, spawn sub-subagents. No turtles all the way down.
 
----
+----
 
 ## Skills: The Playbooks
 
@@ -152,14 +152,14 @@ Skills live in `.claude/skills/<name>/SKILL.md` and are invoked two ways:
 
 ```yaml
 # .claude/skills/deploy/SKILL.md
----
 description: Deploy the application to production
 disable-model-invocation: true  # User-only, no auto-trigger
----
+
+# Instructions below the frontmatter
 Run the deployment pipeline:
-1. Run tests: `npm test`
-2. Build: `npm run build`
-3. Deploy: `npm run deploy`
+1. Run tests: npm test
+2. Build: npm run build
+3. Deploy: npm run deploy
 4. Verify: curl the health endpoint
 ```
 
@@ -178,7 +178,7 @@ Answer "how does X work?"            Subagent (Guide)
 Add project conventions to Claude     Skill (auto-invoked)
 ```
 
----
+----
 
 ## Agent Teams: The War Room
 
@@ -336,7 +336,7 @@ Best practices:
 - Start with research tasks before parallel implementation
 - Monitor your team. Unattended teams risk wasted effort (and wasted dollars)
 
----
+----
 
 ## TL;DR Decision Tree
 
