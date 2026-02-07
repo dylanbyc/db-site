@@ -158,14 +158,14 @@ nav {
 /* Prompt and Cursor for active nav */
 .prompt {
   display: none;
-  color: var(--accent-green);
+  color: var(--accent-yellow);
 }
 
 .cursor {
   display: none;
   width: 4px;
   height: 1.1em;
-  background-color: var(--accent-green);
+  background-color: var(--accent-yellow);
   margin-left: 2px;
   vertical-align: text-bottom;
 }
