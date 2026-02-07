@@ -5,20 +5,41 @@
   <h1>{{ this.title }}</h1>
 
   {% if this.body %}
-  <div class="content">
+  <div class="content blog-intro">
     {{ this.body }}
   </div>
   {% endif %}
 
-  <ul class="post-list">
+  <div class="post-cards">
     {% for post in this.children %}
-    <li class="post-item">
-      <a href="{{ post|url }}">
-        <span class="post-title">{{ post.title }}</span>
-        <time datetime="{{ post.pub_date }}">{{ post.pub_date|dateformat('medium') }}</time>
-      </a>
-    </li>
+    <a href="{{ post|url }}" class="post-card">
+      <div class="post-card-header">
+        <h2 class="post-card-title">{{ post.title }}</h2>
+        <div class="post-card-meta">
+          <time datetime="{{ post.pub_date }}">{{ post.pub_date|dateformat('long') }}</time>
+          {% if post.author %}
+          <span class="post-card-author">by {{ post.author }}</span>
+          {% endif %}
+          {% set words = post.body.source|wordcount %}
+          <span class="post-card-reading-time">{{ words }} words, ~{{ (words / 200)|round(0, 'ceil')|int }} min read</span>
+        </div>
+      </div>
+
+      {% if post.summary %}
+      <p class="post-card-summary">{{ post.summary }}</p>
+      {% endif %}
+
+      {% if post.categories %}
+      <div class="post-card-categories">
+        {% for category in post.categories %}
+        <span class="category">{{ category }}</span>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      <span class="post-card-readmore">Read on &rarr;</span>
+    </a>
     {% endfor %}
-  </ul>
+  </div>
 </article>
 {% endblock %}

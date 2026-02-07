@@ -9,6 +9,8 @@
       {% if this.author %}
       <span class="author">by {{ this.author }}</span>
       {% endif %}
+      {% set words = this.body.source|wordcount %}
+      <span class="reading-time">{{ words }} words, ~{{ (words / 200)|round(0, 'ceil')|int }} min read</span>
     </div>
     {% if this.categories %}
     <div class="categories">

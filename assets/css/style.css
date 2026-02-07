@@ -251,6 +251,11 @@ pre code {
   margin-right: 1rem;
 }
 
+.post-meta .reading-time {
+  display: inline-block;
+  margin-left: 0.5rem;
+}
+
 .categories {
   margin-top: 0.5rem;
 }
@@ -264,40 +269,96 @@ pre code {
   margin-right: 0.5rem;
 }
 
-/* Blog List */
-.post-list {
-  list-style: none;
-  padding: 0;
+/* Blog Intro */
+.blog-intro {
+  margin-bottom: 2rem;
 }
 
-.post-item {
-  padding: 1rem 0;
-  border-bottom: 1px solid var(--border);
-}
-
-.post-item:last-child {
-  border-bottom: none;
-}
-
-.post-item a {
+/* Blog Post Cards */
+.post-cards {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 1rem;
+  flex-direction: column;
+  gap: 1.5rem;
 }
 
-.post-item a:hover {
+.post-card {
+  display: block;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1.5rem 2rem;
+  background: var(--bg);
+  color: var(--text);
   text-decoration: none;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
 }
 
-.post-item a:hover .post-title {
-  text-decoration: underline;
+.post-card:hover {
+  border-color: var(--link);
+  background: var(--code-bg);
+  text-decoration: none;
+  color: var(--text);
 }
 
-.post-item time {
+.post-card-header {
+  margin-bottom: 0.75rem;
+}
+
+.post-card-title {
+  font-size: 1.3rem;
+  margin: 0 0 0.4rem 0;
+  color: var(--link);
+  transition: color 0.2s ease;
+}
+
+.post-card:hover .post-card-title {
+  color: var(--link-hover);
+}
+
+.post-card-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
   color: var(--text-muted);
-  font-size: 0.9rem;
+  font-size: 0.85rem;
+}
+
+.post-card-meta time {
   white-space: nowrap;
+}
+
+.post-card-author::before {
+  content: "";
+}
+
+.post-card-reading-time::before {
+  content: "";
+}
+
+.post-card-summary {
+  margin: 0.75rem 0;
+  color: var(--text);
+  line-height: 1.6;
+  font-size: 0.95rem;
+}
+
+.post-card-categories {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.75rem;
+}
+
+.post-card-readmore {
+  display: inline-block;
+  margin-top: 1rem;
+  color: var(--link);
+  font-size: 0.9rem;
+  font-weight: 400;
+}
+
+.post-card:hover .post-card-readmore {
+  text-decoration: underline;
+  color: var(--link-hover);
 }
 
 /* Citation Block */
@@ -468,9 +529,16 @@ pre.mermaid {
   h1 { font-size: 1.4rem; }
   h2 { font-size: 1.2rem; }
 
-  .post-item a {
+  .post-card {
+    padding: 1rem 1.25rem;
+  }
+
+  .post-card-title {
+    font-size: 1.15rem;
+  }
+
+  .post-card-meta {
     flex-direction: column;
-    align-items: flex-start;
     gap: 0.25rem;
   }
 

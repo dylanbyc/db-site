@@ -6,7 +6,14 @@ author: Dylan Bai
 ---
 pub_date: 2026-02-07
 ---
-categories: claude-code, ai, agent-teams, tools
+categories:
+
+claude-code
+ai
+agent-teams
+tools
+---
+summary: Claude Code ships three ways to split work across multiple AI brains — Subagents, Skills, and Agent Teams. Each solves a different problem, burns a different number of tokens, and will confuse you if you mix them up. Here's how to pick the right one.
 ---
 body:
 
