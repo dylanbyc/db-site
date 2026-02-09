@@ -24,18 +24,21 @@
 }
 
 /* CSS Custom Properties for Theming */
-/* Light theme: Monokai Pro Light (Filter Sun) */
+/* Light theme: monokai.pro inspired warm light */
 :root {
-  --bg: #f8efe7;
-  --text: #2c232e;
-  --text-muted: #92898a;
-  --link: #FF6188;
-  --link-hover: #FF6188;
-  --border: #d2c9c4;
-  --code-bg: #eee5de;
-  --nav-hover: #eee5de;
-  --button-bg: #ded5d0;
-  --button-border: #d2c9c4;
+  --bg: #ede7e5;
+  --text: #29242a;
+  --text-muted: #a59fa0;
+  --link: #e14775;
+  --link-hover: #e14775;
+  --border: #d3cdcc;
+  --code-bg: #faf4f2;
+  --nav-hover: #faf4f2;
+  --heading-accent: #e14775;
+  --link-underline: #a59fa0;
+  --card-bg: #faf4f2;
+  --button-bg: #e2dcda;
+  --button-border: #d3cdcc;
   --accent-red: #ce4770;
   --accent-orange: #d4572b;
   --accent-yellow: #b16803;
@@ -44,18 +47,21 @@
   --accent-purple: #6851a2;
 }
 
-/* Dark theme: Monokai Pro (Filter Spectrum) */
+/* Dark theme: monokai.pro inspired dark */
 [data-theme="dark"] {
-  --bg: #222222;
-  --text: #f7f1ff;
-  --text-muted: #69676c;
-  --link: #FF6188;
-  --link-hover: #FF6188;
-  --border: #525053;
-  --code-bg: #363537;
-  --nav-hover: #363537;
-  --button-bg: #363537;
-  --button-border: #525053;
+  --bg: #19181a;
+  --text: #fcfcfa;
+  --text-muted: #727072;
+  --link: #ff6188;
+  --link-hover: #ff6188;
+  --border: #403e41;
+  --code-bg: #2d2a2e;
+  --nav-hover: #2d2a2e;
+  --heading-accent: #ff6188;
+  --link-underline: #727072;
+  --card-bg: #2d2a2e;
+  --button-bg: #2d2a2e;
+  --button-border: #403e41;
   --accent-red: #fc618d;
   --accent-orange: #fd9353;
   --accent-yellow: #fce566;
@@ -64,30 +70,24 @@
   --accent-purple: #948ae3;
 }
 
-/* Blinking Cursor Animation */
-@keyframes blink {
-  0%, 50% { opacity: 1; }
-  51%, 100% { opacity: 0; }
-}
-
 /* Base Styles */
 *, *::before, *::after {
   box-sizing: border-box;
 }
 
 html {
-  font-size: 16px;
+  font-size: 17px;
   scroll-behavior: smooth;
 }
 
 body {
   font-family: 'Dank Mono', 'Menlo', 'Monaco', 'Courier New', monospace;
-  font-weight: 300;
-  line-height: 1.6;
+  font-weight: 400;
+  line-height: 1.65;
   color: var(--text);
   background-color: var(--bg);
-  padding: 40px 20px;
-  max-width: 1000px;
+  padding: 50px 30px;
+  max-width: 1100px;
   margin: 0 auto;
   transition: background-color 0.2s ease, color 0.2s ease;
 }
@@ -102,7 +102,7 @@ body {
 
 .site-title {
   font-size: 1.75rem;
-  font-weight: 700;
+  font-weight: 400;
   margin: 0;
   color: var(--text);
 }
@@ -111,11 +111,11 @@ body {
 .theme-toggle {
   background: var(--button-bg);
   border: 1px solid var(--button-border);
-  padding: 8px 12px;
-  border-radius: 4px;
+  padding: 6px 10px;
+  border-radius: 8px;
   cursor: pointer;
   font-family: inherit;
-  font-size: 1rem;
+  font-size: 0.9rem;
   color: var(--text);
   transition: background-color 0.2s ease, border-color 0.2s ease;
 }
@@ -136,81 +136,82 @@ nav {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 1.5rem;
-  margin-bottom: 1.5rem;
+  gap: 2rem;
+  margin-bottom: 2rem;
 }
 
 .nav-link {
-  color: var(--text);
+  color: var(--heading-accent);
   text-decoration: none;
-  padding: 4px 8px;
-  border-radius: 3px;
-  transition: background-color 0.2s ease;
+  padding: 4px 10px;
+  border-radius: 4px;
+  transition: background-color 0.2s ease, color 0.2s ease;
   font-weight: 400;
+  font-size: 1.05rem;
 }
 
 .nav-link:hover {
   background-color: var(--nav-hover);
-  color: var(--text);
+  color: var(--heading-accent);
   text-decoration: none;
 }
 
-/* Prompt and Cursor for active nav */
-.prompt {
-  display: none;
-  color: #FF6188;
+.nav-link.active {
+  border-bottom: 2px solid var(--heading-accent);
+  border-radius: 4px 4px 0 0;
 }
 
-.cursor {
-  display: none;
-  width: 4px;
-  height: 1.1em;
-  background-color: #FF6188;
-  margin-left: 2px;
-  vertical-align: text-bottom;
-}
-
-.nav-link.active .prompt {
-  display: inline;
-}
-
-.nav-link.active .cursor {
-  display: inline-block;
-  animation: blink 1s step-end infinite;
-}
-
-/* Terminal Box - wraps tightly around content */
+/* Content wrapper - no terminal box border */
 .terminal-box {
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  padding: 1.5rem 2rem;
+  padding: 1.5rem 0;
 }
 
 /* Typography */
 h1, h2, h3, h4, h5, h6 {
-  font-weight: 700;
+  font-weight: 400;
   line-height: 1.3;
-  margin: 1.5em 0 0.5em;
+  margin: 2em 0 0.75em;
 }
 
-h1 { font-size: 1.75rem; }
-h2 { font-size: 1.4rem; }
-h3 { font-size: 1.2rem; }
-h4 { font-size: 1.1rem; }
+h1 {
+  font-size: 2.2rem;
+}
+
+h2 {
+  font-size: 1.6rem;
+}
+
+h3 {
+  font-size: 1.35rem;
+  color: var(--heading-accent);
+}
+
+h4 {
+  font-size: 1.1rem;
+}
 
 p {
   margin: 1em 0;
+  font-size: 1.05rem;
 }
 
+/* Links - body text style with subtle underline */
 a {
-  color: var(--link);
-  text-decoration: none;
-  transition: color 0.2s ease;
+  color: var(--text);
+  text-decoration: underline 2px var(--link-underline);
+  text-underline-offset: 3px;
+  transition: text-decoration-color 0.2s ease, color 0.2s ease;
 }
 
 a:hover {
-  color: var(--link-hover);
-  text-decoration: underline;
+  color: var(--text);
+  text-decoration: underline 2px var(--link);
+}
+
+/* Nav links override - pink, no underline */
+.nav-link,
+.nav-link:hover {
+  text-decoration: none;
 }
 
 /* Main Content */
@@ -231,16 +232,16 @@ code {
   font-family: 'Dank Mono', 'Menlo', 'Monaco', 'Courier New', monospace;
   background: var(--code-bg);
   padding: 0.2em 0.4em;
-  border-radius: 3px;
+  border-radius: 4px;
   font-size: 0.9em;
 }
 
 pre {
   background: var(--code-bg);
-  padding: 1rem;
-  border-radius: 4px;
+  padding: 1.25rem;
+  border-radius: 8px;
   overflow-x: auto;
-  border: 1px solid var(--border);
+  border: none;
 }
 
 pre code {
@@ -276,10 +277,10 @@ pre code {
 
 .category {
   display: inline-block;
-  background: var(--code-bg);
+  background: var(--card-bg);
   color: var(--text-muted);
-  padding: 0.2em 0.6em;
-  border-radius: 3px;
+  padding: 0.2em 0.75em;
+  border-radius: 12px;
   font-size: 0.85rem;
   margin-right: 0.5rem;
 }
@@ -299,12 +300,12 @@ pre code {
 .post-card {
   display: block;
   border: 1px solid var(--border);
-  border-radius: 4px;
-  padding: 1.5rem 2rem;
-  background: var(--bg);
+  border-radius: 8px;
+  padding: 2rem 2.5rem;
+  background: var(--card-bg);
   color: var(--text);
   text-decoration: none;
-  transition: border-color 0.2s ease, background-color 0.2s ease;
+  transition: border-color 0.2s ease;
 }
 
 .post-card--has-image {
@@ -314,8 +315,7 @@ pre code {
 }
 
 .post-card:hover {
-  border-color: var(--text-muted);
-  background: var(--code-bg);
+  border-color: var(--heading-accent);
   text-decoration: none;
   color: var(--text);
 }
@@ -324,7 +324,7 @@ pre code {
 .post-card-image {
   flex-shrink: 0;
   width: 240px;
-  border-radius: 3px;
+  border-radius: 6px;
   overflow: hidden;
   border: 1px solid var(--border);
 }
@@ -343,7 +343,7 @@ pre code {
 /* Post cover image (individual post page) */
 .post-cover {
   margin-bottom: 1.5rem;
-  border-radius: 4px;
+  border-radius: 8px;
   overflow: hidden;
   border: 1px solid var(--border);
 }
@@ -361,7 +361,7 @@ pre code {
 .post-card-title {
   font-size: 1.3rem;
   margin: 0 0 0.4rem 0;
-  color: var(--text);
+  color: var(--heading-accent);
 }
 
 .post-card-meta {
@@ -387,7 +387,7 @@ pre code {
 .post-card-summary {
   margin: 0.75rem 0;
   color: var(--text);
-  line-height: 1.6;
+  line-height: 1.65;
   font-size: 0.95rem;
 }
 
@@ -404,6 +404,7 @@ pre code {
   color: var(--link);
   font-size: 0.9rem;
   font-weight: 400;
+  text-decoration: none;
 }
 
 .post-card:hover .post-card-readmore {
@@ -428,35 +429,48 @@ pre code {
   margin-top: 2rem;
 }
 
-/* Footer - compact, flows directly under content box */
+.post-footer > p > a {
+  color: var(--heading-accent);
+  text-decoration: none;
+}
+
+.post-footer > p > a:hover {
+  text-decoration: underline;
+  text-decoration-color: var(--heading-accent);
+}
+
+/* Footer */
 footer {
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
   gap: 1.5rem;
-  margin-top: 1rem;
-  padding: 0;
+  align-items: center;
+  margin-top: 2rem;
+  padding: 1.5rem 0;
+  border-top: 1px solid var(--border);
   color: var(--text-muted);
   font-size: 0.9rem;
 }
 
 footer a {
   color: var(--text);
+  text-decoration: underline 2px var(--link-underline);
+  text-underline-offset: 3px;
 }
 
 footer a:hover {
-  color: var(--link);
+  text-decoration: underline 2px var(--link);
 }
 
-/* Blockquotes - Terminal style with > prefix */
+footer .footer-copyright {
+  color: var(--text-muted);
+}
+
+/* Blockquotes - clean left-border style */
 blockquote {
-  border-left: none;
+  border-left: 3px solid var(--heading-accent);
   margin: 1.5em 0;
-  padding: 0;
-  color: var(--text);
-}
-
-blockquote p::before {
-  content: "> ";
+  padding: 0 0 0 1.5rem;
   color: var(--text-muted);
 }
 
@@ -496,7 +510,7 @@ th {
 
 .diagram-panel {
   border: 1px solid var(--border);
-  border-radius: 4px;
+  border-radius: 8px;
   padding: 1rem;
   background: var(--code-bg);
 }
@@ -536,7 +550,7 @@ th {
 
 .approach {
   border: 1px solid var(--border);
-  border-radius: 4px;
+  border-radius: 8px;
   padding: 1rem;
   background: var(--code-bg);
 }
@@ -555,7 +569,7 @@ pre.mermaid {
 /* Responsive */
 @media (max-width: 600px) {
   body {
-    padding: 20px 15px;
+    padding: 25px 18px;
   }
 
   .site-header {
@@ -573,14 +587,14 @@ pre.mermaid {
   }
 
   .terminal-box {
-    padding: 1rem;
+    padding: 1rem 0;
   }
 
-  h1 { font-size: 1.4rem; }
-  h2 { font-size: 1.2rem; }
+  h1 { font-size: 1.6rem; }
+  h2 { font-size: 1.3rem; }
 
   .post-card {
-    padding: 1rem 1.25rem;
+    padding: 1.25rem 1.5rem;
   }
 
   .post-card--has-image {
