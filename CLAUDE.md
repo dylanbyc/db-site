@@ -9,22 +9,31 @@ This is Dylan Bai's personal website, built with [Lektor](https://www.getlektor.
 **Live site:** https://dylanbai.com
 **Deployment:** GitHub Pages via `dylanbyc/dylanbyc.github.io`
 
+## Python & Dependencies
+
+- **Python 3.12** — pinned in `.python-version`
+- **`uv`** for all package management — never use pip
+- **`setuptools`** is a required dependency because Lektor 3.3.12 imports `pkg_resources` at runtime
+
 ## Commands
 
-**Always use `uv` and `uvx` for package management and running Lektor. Never use pip.**
+**Use `uv run` to run Lektor (not `uvx`).** This ensures the project's venv and dependencies are used.
 
 ```bash
+# Install/sync dependencies
+uv sync
+
 # Build the site (output goes to ~/Library/Caches/Lektor/builds/<hash>/)
-uvx lektor build
+uv run lektor build
 
 # Build to a specific directory for inspection
-uvx lektor build -O ./build
+uv run lektor build -O ./build
 
 # Run local dev server with live reload
-uvx lektor server
+uv run lektor server
 
 # Deploy to GitHub Pages (creates CNAME file automatically)
-uvx lektor deploy ghpages
+uv run lektor deploy ghpages
 ```
 
 ## Architecture
